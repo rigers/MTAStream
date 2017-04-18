@@ -87,3 +87,10 @@ ENV/
 
 # Rope project settings
 .ropeproject
+
+# Other Directories
+MTA Static/
+
+# Other files
+*.json
+*.txt
