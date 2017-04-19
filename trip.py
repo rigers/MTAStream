@@ -17,6 +17,7 @@ vehicleStopStatus={
 def getTripId(stationName,route,wait_time):
     feed = gtfs_realtime_pb2.FeedMessage()
     response = requests.get('http://datamine.mta.info/mta_esi.php?key=%s&feed_id=1'%key)
+    print response
     feed.ParseFromString(response.content)
     
     dictTrip = {}
@@ -129,7 +130,7 @@ def getFastestTrip(stationNames,routes):
     
     trip_ids = []
     for route in routes:
-        trip_ids.append(getTripId(start_stop_id, route, 900))
+        trip_ids.append(getTripId(start_stop_id, route, 120))
     
     arrivalTimes = {}
     for trip_id in trip_ids:
