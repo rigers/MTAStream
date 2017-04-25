@@ -1,8 +1,9 @@
-import L_stops as L
+# import L_stops as L
 import trip
 import time
 import stops
 import numpy as np
+from datetime import datetime as dt
 # import datetime.datetime as dt
 
 
@@ -28,6 +29,15 @@ fastestTripSingle = trip.getFastestTrip(L114to116,['1'])
 print fastestTripSingle
     
 if fastestTransfer[2] < fastestTripSingle[1]:
-    print('Take transfer trip')
+    print('Transfer trip')
+    print fastestTrip
+    
+    print("Train to take: %s at %s"%(fastestTrip[0][7],dt.fromtimestamp(fastestTrip[1]).strftime('%H:%M:%S')))
+    print("After transfer to %s at %s and you'll arrive at destination at %s"%(fastestTransfer[0][7],dt.fromtimestamp(fastestTransfer[1]).strftime('%H:%M:%S'), dt.fromtimestamp(fastestTransfer[2]).strftime('%H:%M:%S')))
+    
+    
+    
+    
 else:
     print('Take single trip')
+    print("Train to take: %s at %s"%(fastestTripSingle[0][7],dt.fromtimestamp(fastestTripSingle[1]).strftime('%H:%M:%S')))
