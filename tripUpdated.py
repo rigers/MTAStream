@@ -23,14 +23,15 @@ def getTripId(stationName,route,wait_time,feed):
     for entity in feed.entity:
         if entity.HasField('trip_update'):
             for stop_time_update in entity.trip_update.stop_time_update:
-                # print stop_time_update.stop_id
-                if stop_time_update.stop_id == stationName and entity.trip_update.trip.route_id == route:
                 
+                if stop_time_update.stop_id == stationName and entity.trip_update.trip.route_id == route:
+                    
                     trip_id = entity.trip_update.trip.trip_id
                     departure = int(stop_time_update.departure.time)
+                    # print departure
                     # if 30 < (departure - time.time()):
                     departure30min = abs(departure - time_now - wait_time)
-                    
+                    # print departure30min
                     departureList.append(departure30min)
                     # print(route,departure,departure30min,trip_id)
                     # else:
@@ -38,7 +39,8 @@ def getTripId(stationName,route,wait_time,feed):
                     
                     dictTrip[str(departure30min)]=trip_id
                     
-            
+    # print departureList
+                    
     departureTime = np.min(departureList)
     trip_id = str(dictTrip[str(departureTime)])
     
@@ -49,10 +51,10 @@ def getTripId(stationName,route,wait_time,feed):
     # return (trip_id,departureTime)
 
     
-def getTransferTripId(stationName,route,wait_time):
-    feed = gtfs_realtime_pb2.FeedMessage()
-    response = requests.get('http://datamine.mta.info/mta_esi.php?key=%s&feed_id=1'%key)
-    feed.ParseFromString(response.content)
+def getTransferTripId(stationName,route,wait_time, feed):
+    # feed = gtfs_realtime_pb2.FeedMessage()
+    # response = requests.get('http://datamine.mta.info/mta_esi.php?key=%s&feed_id=1'%key)
+    # feed.ParseFromString(response.content)
     
     dictTrip = {}
     departureList = []
@@ -94,6 +96,7 @@ def getTripStatus(trip_id,startStationName, endStationName, feed):
     current_stop_sequence=None
     current_status=None
     timestamp = None
+    current_stop_id=None
     for entity in feed.entity:
         if entity.HasField('trip_update'):
             if entity.trip_update.trip.trip_id == trip_id:
@@ -112,6 +115,7 @@ def getTripStatus(trip_id,startStationName, endStationName, feed):
                 current_stop_sequence = int(entity.vehicle.current_stop_sequence)
                 current_status = str(entity.vehicle.current_status)
                 timestamp = int(entity.vehicle.timestamp)
+                current_stop_id = entity.vehicle.stop_id
         
         if entity.HasField('alert'):
 			for informed_entity in entity.alert.informed_entity:
@@ -148,12 +152,12 @@ def getTripStatus(trip_id,startStationName, endStationName, feed):
                             
 
         
-    return(departureTime,arrivalTime,current_stop_sequence,current_status,timestamp)   
+    return(departureTime,arrivalTime,current_stop_id,current_stop_sequence,current_status,timestamp)   
 
 def getFastestTrip(stationNames,routes):
     feed = gtfs_realtime_pb2.FeedMessage()
     response = requests.get('http://datamine.mta.info/mta_esi.php?key=%s&feed_id=1'%APIkey)
-    print response       
+    # print response       
     feed.ParseFromString(response.content)
     
     start_stop_id = stationNames[0]
@@ -177,16 +181,17 @@ def getFastestTrip(stationNames,routes):
         
         trip_ids[key]['departureTime'] = trip_data[0]
         trip_ids[key]['arrivalTime'] = trip_data[1]
-        trip_ids[key]['currentStop'] = trip_data[2]
-        trip_ids[key]['currentStatus'] = vehicleStopStatus[trip_data[3]]
-        trip_ids[key]['vehicleTime'] = trip_data[4]
+        trip_ids[key]['currentStopId'] = trip_data[2]
+        trip_ids[key]['currentStopSequence'] = trip_data[3]
+        trip_ids[key]['currentStatus'] = vehicleStopStatus[trip_data[4]]
+        trip_ids[key]['vehicleTime'] = trip_data[5]
         trip_ids[key]['trip_id'] = key
         
         # pprint(trip_ids[key])
             
-        if trip_ids[key]['currentStop'] != None:
+        if trip_ids[key]['currentStopSequence'] != None:
             # currentStopName = L.stationNames[len(L.stationNames)-currentStop]
-            currentStopName = stops.line1Seq[len(stops.line1Seq)-trip_ids[key]['currentStop']]
+            currentStopName = stops.line1Seq[len(stops.line1Seq)-trip_ids[key]['currentStopSequence']]
 
         if trip_ids[key]['departureTime'] == None:
             arrivalMinutes = ((trip_ids[key]['arrivalTime'])-int(time.time()))/60
@@ -213,39 +218,62 @@ def getFastestTrip(stationNames,routes):
     
     
 def getFastestTransfer(stationNames,route,timeDiff):
-  
+    
+    feed = gtfs_realtime_pb2.FeedMessage()
+    response = requests.get('http://datamine.mta.info/mta_esi.php?key=%s&feed_id=1'%APIkey)
+    print response       
+    feed.ParseFromString(response.content)
+    
+    
     start_stop_id = stationNames[0]
     end_stop_id = stationNames[1]
-
-    trip_id = getTransferTripId(start_stop_id, route, timeDiff)
-
+    
+    trip = {}
+    
+    trip_id = getTransferTripId(start_stop_id, route, timeDiff, feed)
+    
+    
+    trip[trip_id] = {}
     arrivalTimes = {}
 
-    trip_data = getTripStatus(trip_id, start_stop_id, end_stop_id)
-    departureTime = trip_data[0]
-    arrivalTime = trip_data[1]
-    currentStop = trip_data[2]
-    currentStatus = trip_data[3]
-    vehicleTime = trip_data[4]
-        
-    if currentStop != None:
+    trip_data = getTripStatus(trip_id, start_stop_id, end_stop_id, feed)
+    # departureTime = trip_data[0]
+    # arrivalTime = trip_data[1]
+    # currentStop = trip_data[2]
+    # currentStatus = trip_data[3]
+    # vehicleTime = trip_data[4]
+    
+    trip[trip_id]['departureTime'] = trip_data[0]
+    trip[trip_id]['arrivalTime'] = trip_data[1]
+    trip[trip_id]['currentStopId'] = trip_data[2]
+    trip[trip_id]['currentStopSequence'] = trip_data[3]
+    trip[trip_id]['currentStatus'] = vehicleStopStatus[trip_data[4]]
+    trip[trip_id]['vehicleTime'] = trip_data[5]
+    trip[trip_id]['trip_id'] = trip_id
+    
+    
+    
+    
+    if trip[trip_id]['currentStopSequence'] != None:
         # currentStopName = L.stationNames[len(L.stationNames)-currentStop]
-        currentStopName = stops.line1Seq[len(stops.line1Seq)-currentStop]
+        currentStopName = stops.line1Seq[len(stops.line1Seq)-trip[trip_id]['currentStopSequence']]
 
 
 
-    if departureTime == None:
-        arrivalMinutes = ((arrivalTime)-int(time.time()))/60
-        arrivalTimes[trip_id] = arrivalTime
+    if trip[trip_id]['departureTime'] == None:
+        arrivalMinutes = ((trip[trip_id]['arrivalTime'])-int(time.time()))/60
+        arrivalTimes[trip_id] = trip[trip_id]['arrivalTime']
 
     else:
-        departMinutes = ((departureTime)-int(time.time()))/60
+        departMinutes = ((trip[trip_id]['departureTime'])-int(time.time()))/60
         try:
-            arrivalMinutes = ((arrivalTime)-int(time.time()))/60
-            arrivalTimes[trip_id] = arrivalTime
+            arrivalMinutes = ((trip[trip_id]['arrivalTime'])-int(time.time()))/60
+            arrivalTimes[trip_id] = trip[trip_id]['arrivalTime']
         except:
             print('No arrival information avaialble')
-            
-    return(trip_id,departureTime,arrivalTime)
+    
+    # print trip
+    
+    return(trip[trip_id])
 
 
