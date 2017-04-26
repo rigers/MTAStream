@@ -1,9 +1,13 @@
-import L_stops as L
+# import L_stops as L
 import trip
 import time
 import stops
 import numpy as np
+<<<<<<< HEAD
 import json
+=======
+from datetime import datetime as dt
+>>>>>>> ab07b012e66d93da7ec7987507d59654ff350aac
 # import datetime.datetime as dt
 
 
@@ -29,47 +33,19 @@ fastestTripSingle = trip.getFastestTrip(L114to1116,['1'])
 print fastestTripSingle
     
 if fastestTransfer[2] < fastestTripSingle[1]:
-    print('Take transfer trip')
-    print(fastestTrip)
-    print(fastestTransfer)
-    data = {}
-    data['start']={}
-    data['transfer']={}
+
+    print('Transfer trip')
+    print fastestTrip
     
-    data['start']['trip_id']=fastestTrip[0]
-    data['start']['route_id']=fastestTrip[0][7]
-    data['start']['start_station']=L114to196[0]
-    data['start']['departure']=fastestTrip[1]
-    data['start']['end_station']=L114to196[1]
-    # data['start']['arrival']=
+    print("Train to take: %s at %s"%(fastestTrip[0][7],dt.fromtimestamp(fastestTrip[1]).strftime('%H:%M:%S')))
+    print("After transfer to %s at %s and you'll arrive at destination at %s"%(fastestTransfer[0][7],dt.fromtimestamp(fastestTransfer[1]).strftime('%H:%M:%S'), dt.fromtimestamp(fastestTransfer[2]).strftime('%H:%M:%S')))
     
-    data['transfer']['trip_id']=fastestTransfer[0]
-    data['transfer']['route_id']=fastestTransfer[0][7]
-    data['transfer']['start_station']=L196to1116[0]
-    data['transfer']['departure']=fastestTransfer[1]
-    data['transfer']['arrival']=fastestTransfer[2]
-    data['transfer']['end_station']=L196to1116[1]
-    
-    
-    json_data = json.dumps(data)
-    
-    print json_data
+
     
     
     
 else:
     print('Take single trip')
-    data = {}
-    data['start']={}
-    data['transfer']={}
-    
-    data['start']['trip_id']=fastestTripSingle[0]
-    data['start']['route_id']=fastestTripSingle[0][7]
-    data['start']['start_station']=L114to1116[0]
-    data['start']['departure']=fastestTripSingle[1]
-    data['start']['end_station']=L114to1116[1]
-    
-    json_data = json.dumps(data)
-    
-    print json_data
-    
+
+    print("Train to take: %s at %s"%(fastestTripSingle[0][7],dt.fromtimestamp(fastestTripSingle[1]).strftime('%H:%M:%S')))
+

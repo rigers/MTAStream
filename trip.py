@@ -130,8 +130,12 @@ def getFastestTrip(stationNames,routes):
     
     trip_ids = {}
     for route in routes:
+<<<<<<< HEAD
         trip_id = getTripId(start_stop_id, route, 120)
         trip_ids[trip_id] = {}
+=======
+        trip_ids.append(getTripId(start_stop_id, route, 0))
+>>>>>>> ab07b012e66d93da7ec7987507d59654ff350aac
     
     arrivalTimes = {}
     for trip_id in trip_ids:
