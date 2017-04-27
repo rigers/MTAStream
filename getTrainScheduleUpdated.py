@@ -1,4 +1,4 @@
-# import L_stops as L
+from google.transit import gtfs_realtime_pb2
 import tripUpdated as trip
 import time
 import stops
@@ -6,7 +6,7 @@ import numpy as np
 import json
 import sys
 from pprint import pprint
-# import datetime.datetime as dt
+from datetime import datetime as dt
 
 
 if sys.argv[1]=='14 St' and sys.argv[2]=='116 St - Columbia University':
@@ -15,6 +15,7 @@ if sys.argv[1]=='14 St' and sys.argv[2]=='116 St - Columbia University':
     transfer = [stops.line1Nbound['96 St'],stops.line1Nbound['116 St - Columbia University']]
     start = [stops.line1Nbound['14 St'],stops.line1Nbound['96 St']]
     routes = ['1','2', '3']
+    line = stops.line1
     # transfer_route = ['1']
     
 elif sys.argv[1]=='116 St - Columbia University' and sys.argv[2]=='14 St':
@@ -22,6 +23,7 @@ elif sys.argv[1]=='116 St - Columbia University' and sys.argv[2]=='14 St':
     transfer = [stops.line1Sbound['96 St'],stops.line1Sbound['14 St']]
     start = [stops.line1Sbound['116 St - Columbia University'],stops.line1Sbound['96 St']]
     routes = ['1','2','3']
+    line = stops.line1
     # transfer_route = ['1']
     
     
@@ -72,7 +74,7 @@ else:
     # print('Take single trip')
     data = {}
     data['start']=fastestTripSingle
-    # data['transfer']={}
+    data['transfer']=None
     
     # data['start']['trip_id']=fastestTripSingle[0]
     # data['start']['route_id']=fastestTripSingle[0][7]
@@ -87,8 +89,39 @@ else:
     
     
 while 1:
-    time.sleep(10)
-    update = trip.tripUpdate(data['start']['trip_id'], start)
+    time.sleep(30)
+    feed = gtfs_realtime_pb2.FeedMessage()
+    response = requests.get('http://datamine.mta.info/mta_esi.php?key=%s&feed_id=1'%APIkey)
+    # print response       
+    feed.ParseFromString(response.content)
     
-    pprint(update)
     
+    update = trip.tripUpdate(data['start']['trip_id'], start,feed)
+    
+    udata = {}
+    udata['start']={}
+        
+    udata['start']['trip_id']=update[0]
+    udata['start']['departureTime']=dt.fromtimestamp(update[1]).strftime('%H:%M:%S')
+    udata['start']['arrivalTime']=dt.fromtimestamp(update[2]).strftime('%H:%M:%S')
+    udata['start']['current_stop_id']=line[str(update[3][:3])]
+    udata['start']['current_status']=update[5]
+    udata['start']['train_status']=update[6]
+    udata['start']['time']=dt.fromtimestamp(update[7]).strftime('%H:%M:%S')
+    
+    if data['transfer']!=None:
+        transfer = trip.tripUpdate(data['start']['trip_id'], transfer,feed)
+        
+        udata['transfer']={}
+        udata['transfer']['trip_id']=update[0]
+        udata['transfer']['departureTime']=dt.fromtimestamp(update[1]).strftime('%H:%M:%S')
+        udata['transfer']['arrivalTime']=dt.fromtimestamp(update[2]).strftime('%H:%M:%S')
+        udata['transfer']['current_stop_id']=line[str(update[3][:3])]
+        udata['transfer']['current_status']=update[5]
+        udata['transfer']['train_status']=update[6]
+        udata['transfer']['time']=dt.fromtimestamp(update[7]).strftime('%H:%M:%S')
+    
+    
+    
+    
+    pprint(udata)

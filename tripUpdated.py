@@ -297,11 +297,11 @@ def getFastestTransfer(stationNames,routes,timeDiff):
     
     
     
-def tripUpdate(trip_id,stationNames):   
-    feed = gtfs_realtime_pb2.FeedMessage()
-    response = requests.get('http://datamine.mta.info/mta_esi.php?key=%s&feed_id=1'%APIkey)
-    # print response       
-    feed.ParseFromString(response.content)
+def tripUpdate(trip_id,stationNames,feed):   
+    # feed = gtfs_realtime_pb2.FeedMessage()
+    # response = requests.get('http://datamine.mta.info/mta_esi.php?key=%s&feed_id=1'%APIkey)
+    # # print response       
+    # feed.ParseFromString(response.content)
     
     
     startStationName = stationNames[0]
@@ -348,7 +348,7 @@ def tripUpdate(trip_id,stationNames):
                         # print(entity.alert.header_text.translation[0].text)
                         
         
-    return(departureTime,arrivalTime,current_stop_id,current_stop_sequence,current_status,train_status,timestamp)
+    return(trip_id,departureTime,arrivalTime,current_stop_id,current_stop_sequence,current_status,train_status,timestamp)
     
     
     
