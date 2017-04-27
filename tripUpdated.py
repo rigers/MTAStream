@@ -165,7 +165,7 @@ def getTripStatus(trip_id,startStationName, endStationName, feed):
 def getFastestTrip(stationNames,routes):
     feed = gtfs_realtime_pb2.FeedMessage()
     response = requests.get('http://datamine.mta.info/mta_esi.php?key=%s&feed_id=1'%APIkey)
-    # print response       
+    # print response.content       
     feed.ParseFromString(response.content)
     
     start_stop_id = stationNames[0]
@@ -173,7 +173,7 @@ def getFastestTrip(stationNames,routes):
     
     trip_ids = {}
     for route in routes:
-        trip_id = getTripId(start_stop_id, route, 120, feed)
+        trip_id = getTripId(start_stop_id, route, 900, feed)
         if trip_id != None:
             trip_ids[trip_id] = {}
     # pprint(trip_ids.keys())
@@ -181,7 +181,7 @@ def getFastestTrip(stationNames,routes):
     arrivalTimes = {}
     for key in trip_ids.keys():
         trip_data = getTripStatus(key, start_stop_id, end_stop_id, feed)
-        print(key)
+        # print(key)
         # departureTime = trip_data[0]
         # arrivalTime = trip_data[1]
         # currentStop = trip_data[2]
@@ -297,7 +297,15 @@ def getFastestTransfer(stationNames,routes,timeDiff):
     
     
     
- def tripUpdate(trip_id,startStationName, endStationName, feed)   
+def tripUpdate(trip_id,stationNames):   
+    feed = gtfs_realtime_pb2.FeedMessage()
+    response = requests.get('http://datamine.mta.info/mta_esi.php?key=%s&feed_id=1'%APIkey)
+    # print response       
+    feed.ParseFromString(response.content)
+    
+    
+    startStationName = stationNames[0]
+    endStationName = stationNames[1]
     
     departureTime=None
     arrivalTime=None

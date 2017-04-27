@@ -83,4 +83,12 @@ else:
     json_data = json.dumps(data)
     
     pprint(json_data)
+
+    
+    
+while 1:
+    time.sleep(10)
+    update = trip.tripUpdate(data['start']['trip_id'], start)
+    
+    pprint(update)
     

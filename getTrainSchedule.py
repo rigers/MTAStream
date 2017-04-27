@@ -3,11 +3,10 @@ import trip
 import time
 import stops
 import numpy as np
-<<<<<<< HEAD
+
 import json
-=======
 from datetime import datetime as dt
->>>>>>> ab07b012e66d93da7ec7987507d59654ff350aac
+
 # import datetime.datetime as dt
 
 
