@@ -40,10 +40,11 @@ def getTripId(stationName,route,wait_time,feed):
                     dictTrip[str(departure30min)]=trip_id
                     
     # print departureList
-                    
-    departureTime = np.min(departureList)
-    trip_id = str(dictTrip[str(departureTime)])
-    
+    try:
+        departureTime = np.min(departureList)
+        trip_id = str(dictTrip[str(departureTime)])
+    except:
+        trip_id = None
     # pprint(dictTrip)
     # pprint(departureTime)
     # pprint(trip_id)
@@ -77,10 +78,11 @@ def getTransferTripId(stationName,route,wait_time, feed):
                     
                         dictTrip[str(departure30min)]=trip_id
                     
-            
-    departureTime = np.min(departureList)
-    trip_id = str(dictTrip[str(departureTime)])
-    
+    try:
+        departureTime = np.min(departureList)
+        trip_id = str(dictTrip[str(departureTime)])
+    except:
+        trip_id = None
     # pprint(dictTrip)
     # pprint(departureTime)
     # pprint(trip_id)
@@ -166,13 +168,14 @@ def getFastestTrip(stationNames,routes):
     trip_ids = {}
     for route in routes:
         trip_id = getTripId(start_stop_id, route, 120, feed)
-        trip_ids[trip_id] = {}
+        if trip_id != None:
+            trip_ids[trip_id] = {}
     # pprint(trip_ids.keys())
     
     arrivalTimes = {}
     for key in trip_ids.keys():
         trip_data = getTripStatus(key, start_stop_id, end_stop_id, feed)
-        # print (trip_id,trip_data)
+        # print(trip_id,trip_data)
         # departureTime = trip_data[0]
         # arrivalTime = trip_data[1]
         # currentStop = trip_data[2]
@@ -217,63 +220,131 @@ def getFastestTrip(stationNames,routes):
     return(trip_ids[trip_id_leastTime])
     
     
-def getFastestTransfer(stationNames,route,timeDiff):
+def getFastestTransfer(stationNames,routes,timeDiff):
     
     feed = gtfs_realtime_pb2.FeedMessage()
     response = requests.get('http://datamine.mta.info/mta_esi.php?key=%s&feed_id=1'%APIkey)
-    print response       
+    # print response       
     feed.ParseFromString(response.content)
     
     
     start_stop_id = stationNames[0]
     end_stop_id = stationNames[1]
     
-    trip = {}
+    trip_ids = {}
+    for route in routes:
+        trip_id = getTransferTripId(start_stop_id, route, timeDiff, feed)
+        trip_ids[trip_id] = {}
+    # pprint(trip_ids.keys())
     
-    trip_id = getTransferTripId(start_stop_id, route, timeDiff, feed)
-    
-    
-    trip[trip_id] = {}
     arrivalTimes = {}
+    for key in trip_ids.keys():
+    
+        trip_data = getTripStatus(key, start_stop_id, end_stop_id, feed)
+        # print(trip_id,trip_data)
+        # departureTime = trip_data[0]
+        # arrivalTime = trip_data[1]
+        # currentStop = trip_data[2]
+        # currentStatus = trip_data[3]
+        # vehicleTime = trip_data[4]
+        
+        trip_ids[key]['departureTime'] = trip_data[0]
+        trip_ids[key]['arrivalTime'] = trip_data[1]
+        trip_ids[key]['currentStopId'] = trip_data[2]
+        trip_ids[key]['currentStopSequence'] = trip_data[3]
+        trip_ids[key]['currentStatus'] = vehicleStopStatus[trip_data[4]]
+        trip_ids[key]['vehicleTime'] = trip_data[5]
+        trip_ids[key]['trip_id'] = key
+        
+        # pprint(trip_ids[key])
+            
+        if trip_ids[key]['currentStopSequence'] != None:
+            # currentStopName = L.stationNames[len(L.stationNames)-currentStop]
+            currentStopName = stops.line1Seq[len(stops.line1Seq)-trip_ids[key]['currentStopSequence']]
 
-    trip_data = getTripStatus(trip_id, start_stop_id, end_stop_id, feed)
-    # departureTime = trip_data[0]
-    # arrivalTime = trip_data[1]
-    # currentStop = trip_data[2]
-    # currentStatus = trip_data[3]
-    # vehicleTime = trip_data[4]
+        if trip_ids[key]['departureTime'] == None:
+            arrivalMinutes = ((trip_ids[key]['arrivalTime'])-int(time.time()))/60
+            arrivalTimes[key] = trip_ids[key]['arrivalTime']
+            
+        else:
+            departMinutes = ((trip_ids[key]['departureTime'])-int(time.time()))/60
+            try:
+                arrivalMinutes = ((trip_ids[key]['arrivalTime'])-int(time.time()))/60
+                arrivalTimes[key] = trip_ids[key]['arrivalTime']
+            except:
+                print('No arrival information avaialble')
+            
+    # pprint(trip_ids)
+
+    tempTimes = []
+    for key in arrivalTimes:
+        tempTimes.append(arrivalTimes[key])
+    leastTime = np.min(tempTimes)
+    for key in arrivalTimes:
+        if arrivalTimes[key] == leastTime:
+            trip_id_leastTime = key
+    return(trip_ids[trip_id_leastTime])
     
-    trip[trip_id]['departureTime'] = trip_data[0]
-    trip[trip_id]['arrivalTime'] = trip_data[1]
-    trip[trip_id]['currentStopId'] = trip_data[2]
-    trip[trip_id]['currentStopSequence'] = trip_data[3]
-    trip[trip_id]['currentStatus'] = vehicleStopStatus[trip_data[4]]
-    trip[trip_id]['vehicleTime'] = trip_data[5]
-    trip[trip_id]['trip_id'] = trip_id
     
     
     
     
-    if trip[trip_id]['currentStopSequence'] != None:
-        # currentStopName = L.stationNames[len(L.stationNames)-currentStop]
-        currentStopName = stops.line1Seq[len(stops.line1Seq)-trip[trip_id]['currentStopSequence']]
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    # trip_id = getTransferTripId(start_stop_id, route, timeDiff, feed)
+    
+    # print trip_id
+    
+    # trip[trip_id] = {}
+    # arrivalTimes = {}
+
+    # trip_data = getTripStatus(trip_id, start_stop_id, end_stop_id, feed)
+    # # departureTime = trip_data[0]
+    # # arrivalTime = trip_data[1]
+    # # currentStop = trip_data[2]
+    # # currentStatus = trip_data[3]
+    # # vehicleTime = trip_data[4]
+    
+    # trip[trip_id]['departureTime'] = trip_data[0]
+    # trip[trip_id]['arrivalTime'] = trip_data[1]
+    # trip[trip_id]['currentStopId'] = trip_data[2]
+    # trip[trip_id]['currentStopSequence'] = trip_data[3]
+    # trip[trip_id]['currentStatus'] = vehicleStopStatus[trip_data[4]]
+    # trip[trip_id]['vehicleTime'] = trip_data[5]
+    # trip[trip_id]['trip_id'] = trip_id
+    
+    
+    
+    
+    # if trip[trip_id]['currentStopSequence'] != None:
+        # # currentStopName = L.stationNames[len(L.stationNames)-currentStop]
+        # currentStopName = stops.line1Seq[len(stops.line1Seq)-trip[trip_id]['currentStopSequence']]
 
 
 
-    if trip[trip_id]['departureTime'] == None:
-        arrivalMinutes = ((trip[trip_id]['arrivalTime'])-int(time.time()))/60
-        arrivalTimes[trip_id] = trip[trip_id]['arrivalTime']
+    # if trip[trip_id]['departureTime'] == None:
+        # arrivalMinutes = ((trip[trip_id]['arrivalTime'])-int(time.time()))/60
+        # arrivalTimes[trip_id] = trip[trip_id]['arrivalTime']
 
-    else:
-        departMinutes = ((trip[trip_id]['departureTime'])-int(time.time()))/60
-        try:
-            arrivalMinutes = ((trip[trip_id]['arrivalTime'])-int(time.time()))/60
-            arrivalTimes[trip_id] = trip[trip_id]['arrivalTime']
-        except:
-            print('No arrival information avaialble')
+    # else:
+        # departMinutes = ((trip[trip_id]['departureTime'])-int(time.time()))/60
+        # try:
+            # arrivalMinutes = ((trip[trip_id]['arrivalTime'])-int(time.time()))/60
+            # arrivalTimes[trip_id] = trip[trip_id]['arrivalTime']
+        # except:
+            # print('No arrival information avaialble')
     
-    # print trip
+    # # print trip
     
-    return(trip[trip_id])
+    # return(trip[trip_id])
 
 
