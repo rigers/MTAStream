@@ -1,7 +1,7 @@
 # MTAStream
 
 To run type: python getTrainScheduleUpdated.py '14 St' '116 St - Columbia University'
-
+'''json
 {
 	"start": {
 		"departureTime": 1493265184,
@@ -22,3 +22,4 @@ To run type: python getTrainScheduleUpdated.py '14 St' '116 St - Columbia Univer
 		"trip_id": "141900_1..N02R"
 	}
 }
+'''
