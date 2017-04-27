@@ -12,7 +12,8 @@ APIkey = '10a12f7b56a78c2111a54c380493a96b'
 vehicleStopStatus={
     '0':'comming at',
     '1':'stopped at',
-    '2':'in transit to'}
+    '2':'in transit to',
+    None:None}
 
 def getTripId(stationName,route,wait_time,feed):
     
@@ -99,16 +100,19 @@ def getTripStatus(trip_id,startStationName, endStationName, feed):
     current_status=None
     timestamp = None
     current_stop_id=None
+    train_status = None
     for entity in feed.entity:
         if entity.HasField('trip_update'):
             if entity.trip_update.trip.trip_id == trip_id:
                 for stop_time_update in entity.trip_update.stop_time_update:
                     if stop_time_update.stop_id == startStationName:
                         departureTime = int(stop_time_update.departure.time)
+                        # pprint(trip_id)
                         # pprint(entity)
                     
                     if stop_time_update.stop_id == endStationName:
                         arrivalTime = int(stop_time_update.arrival.time)
+                        # pprint(trip_id)
                         # pprint(entity)
             
                 
@@ -122,39 +126,41 @@ def getTripStatus(trip_id,startStationName, endStationName, feed):
         if entity.HasField('alert'):
 			for informed_entity in entity.alert.informed_entity:
 				if informed_entity.trip.trip_id == trip_id:
-					file.write(str(entity.alert.informed_entity))
+					# file.write(str(entity.alert.informed_entity))
 					if entity.alert.HasField('header_text'):
-						file.write(str(entity.alert.header_text))
+						# file.write(str(entity.alert.header_text))
+                        			train_status = entity.alert.header_text.translation[0].text
+                        			# print(train_status)
+                        			# print(entity.alert.header_text)
+                        # print(entity.alert.header_text.translation[0].text)
                         
                         
-                        
-                        
-        if entity.HasField('alert'):
-            alt_route = []
-            alt_status = []
-            # try:
-            for trip in entity.alert.informed_entity:
+        # if entity.HasField('alert'):
+            # alt_route = []
+            # alt_status = []
+            # # try:
+            # for trip in entity.alert.informed_entity:
                 
-                try:
-                    alt_route.append(trip.trip.route_id)
-                except:
-                    alt_route.append('NA')
+                # try:
+                    # alt_route.append(trip.trip.route_id)
+                # except:
+                    # alt_route.append('NA')
+            # # except:
+                # # pass
+                
+            # try:
+                # for text in entity.alert.header_text.translation:
+                    # # print text.text
+                    # try:
+                        # alt_status.append(text.text)
+                    # except:
+                        # alt_status.append('NA')
             # except:
                 # pass
-                
-            try:
-                for text in entity.alert.header_text.translation:
-                    # print text.text
-                    try:
-                        alt_status.append(text.text)
-                    except:
-                        alt_status.append('NA')
-            except:
-                pass
                             
 
         
-    return(departureTime,arrivalTime,current_stop_id,current_stop_sequence,current_status,timestamp)   
+    return(departureTime,arrivalTime,current_stop_id,current_stop_sequence,current_status,train_status,timestamp)   
 
 def getFastestTrip(stationNames,routes):
     feed = gtfs_realtime_pb2.FeedMessage()
@@ -175,7 +181,7 @@ def getFastestTrip(stationNames,routes):
     arrivalTimes = {}
     for key in trip_ids.keys():
         trip_data = getTripStatus(key, start_stop_id, end_stop_id, feed)
-        # print(trip_id,trip_data)
+        print(key)
         # departureTime = trip_data[0]
         # arrivalTime = trip_data[1]
         # currentStop = trip_data[2]
@@ -187,8 +193,10 @@ def getFastestTrip(stationNames,routes):
         trip_ids[key]['currentStopId'] = trip_data[2]
         trip_ids[key]['currentStopSequence'] = trip_data[3]
         trip_ids[key]['currentStatus'] = vehicleStopStatus[trip_data[4]]
-        trip_ids[key]['vehicleTime'] = trip_data[5]
+        trip_ids[key]['train_status'] = trip_data[5]
+        trip_ids[key]['vehicleTime'] = trip_data[6]
         trip_ids[key]['trip_id'] = key
+        
         
         # pprint(trip_ids[key])
             
@@ -234,8 +242,9 @@ def getFastestTransfer(stationNames,routes,timeDiff):
     trip_ids = {}
     for route in routes:
         trip_id = getTransferTripId(start_stop_id, route, timeDiff, feed)
-        trip_ids[trip_id] = {}
-    # pprint(trip_ids.keys())
+        if trip_id != None:
+            trip_ids[trip_id] = {}
+    pprint(trip_ids.keys())
     
     arrivalTimes = {}
     for key in trip_ids.keys():
@@ -253,6 +262,7 @@ def getFastestTransfer(stationNames,routes,timeDiff):
         trip_ids[key]['currentStopId'] = trip_data[2]
         trip_ids[key]['currentStopSequence'] = trip_data[3]
         trip_ids[key]['currentStatus'] = vehicleStopStatus[trip_data[4]]
+        trip_ids[key]['train_status'] = trip_data[5]
         trip_ids[key]['vehicleTime'] = trip_data[5]
         trip_ids[key]['trip_id'] = key
         
@@ -272,7 +282,7 @@ def getFastestTransfer(stationNames,routes,timeDiff):
                 arrivalMinutes = ((trip_ids[key]['arrivalTime'])-int(time.time()))/60
                 arrivalTimes[key] = trip_ids[key]['arrivalTime']
             except:
-                print('No arrival information avaialble')
+                print('No arrival information avaialble.')
             
     # pprint(trip_ids)
 

@@ -82,5 +82,5 @@ else:
     
     json_data = json.dumps(data)
     
-    print json_data
+    pprint(json_data)
     
