@@ -297,9 +297,50 @@ def getFastestTransfer(stationNames,routes,timeDiff):
     
     
     
+ def tripUpdate(trip_id,startStationName, endStationName, feed)   
     
-    
-    
+    departureTime=None
+    arrivalTime=None
+    current_stop_sequence=None
+    current_status=None
+    timestamp = None
+    current_stop_id=None
+    train_status = None
+    for entity in feed.entity:
+        if entity.HasField('trip_update'):
+            if entity.trip_update.trip.trip_id == trip_id:
+                for stop_time_update in entity.trip_update.stop_time_update:
+                    if stop_time_update.stop_id == startStationName:
+                        departureTime = int(stop_time_update.departure.time)
+                        # pprint(trip_id)
+                        # pprint(entity)
+                    
+                    if stop_time_update.stop_id == endStationName:
+                        arrivalTime = int(stop_time_update.arrival.time)
+                        # pprint(trip_id)
+                        # pprint(entity)
+            
+                
+        if entity.HasField('vehicle'):
+            if entity.vehicle.trip.trip_id == trip_id:
+                current_stop_sequence = int(entity.vehicle.current_stop_sequence)
+                current_status = str(entity.vehicle.current_status)
+                timestamp = int(entity.vehicle.timestamp)
+                current_stop_id = entity.vehicle.stop_id
+        
+        if entity.HasField('alert'):
+			for informed_entity in entity.alert.informed_entity:
+				if informed_entity.trip.trip_id == trip_id:
+					# file.write(str(entity.alert.informed_entity))
+					if entity.alert.HasField('header_text'):
+						# file.write(str(entity.alert.header_text))
+                        			train_status = entity.alert.header_text.translation[0].text
+                        			# print(train_status)
+                        			# print(entity.alert.header_text)
+                        # print(entity.alert.header_text.translation[0].text)
+                        
+        
+    return(departureTime,arrivalTime,current_stop_id,current_stop_sequence,current_status,train_status,timestamp)
     
     
     
