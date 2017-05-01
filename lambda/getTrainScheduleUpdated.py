@@ -34,13 +34,15 @@ def getlist(start,end):
     
 def getTrip(event, context):
     
+    print(event)
+    
     feed = gtfs_realtime_pb2.FeedMessage()
     response = requests.get('http://datamine.mta.info/mta_esi.php?key=%s&feed_id=1'%APIkey)
     # print response       
     feed.ParseFromString(response.content)
     
     
-    (single, transfer, start, routes, line)=getlist(event[0],event[1])
+    (single, transfer, start, routes, line)=getlist(event['start'],event['end'])
         
         
     # elif sys.argv[1]=='116 St - Columbia University' and sys.argv[2]=='14 St':
@@ -112,7 +114,7 @@ def getTrip(event, context):
         # pprint(json_data)
 
     # return start    
-    return data
+    return json_data
     
 def getTripUpdate(event, context):
     # time.sleep(30)
@@ -120,41 +122,50 @@ def getTripUpdate(event, context):
     response = requests.get('http://datamine.mta.info/mta_esi.php?key=%s&feed_id=1'%APIkey)
     # print response       
     feed.ParseFromString(response.content)
-    print(event[0])
-    (single, transfer, start, routes, line)=getlist(event[0],event[1])
+    print(event)
+    (single, transfer, start, routes, line)=getlist(event['start'],event['end'])
+    # (single, transfer, start, routes, line)=getlist(event[u'queryStringParameters'][u'start'],event[u'queryStringParameters'][u'end'])
     
     # try:
-    update = trip.tripUpdate(event[2], start,feed)
+    update = trip.tripUpdate(event['tripstart'], start,feed)
+    # update = trip.tripUpdate(event[u'queryStringParameters'][u'tripstart'], start,feed)
     
     udata = {}
     udata['start']={}
         
     udata['start']['trip_id']=update[0]
-    udata['start']['departureTime']=dt.fromtimestamp(update[1]).strftime('%H:%M:%S')
-    udata['start']['arrivalTime']=dt.fromtimestamp(update[2]).strftime('%H:%M:%S')
+    # udata['start']['departureTime']=dt.fromtimestamp(update[1]).strftime('%H:%M:%S')
+    udata['start']['departureTime']=update[1]
+    # udata['start']['arrivalTime']=dt.fromtimestamp(update[2]).strftime('%H:%M:%S')
+    udata['start']['arrivalTime']=update[2]
     # udata['start']['current_stop_id']=line[str(update[3][:3])]
-    udata['start']['current_stop_id']=str(update[3][:3])
+    udata['start']['current_stop_id']=update[3]
     udata['start']['current_status']=update[5]
     udata['start']['train_status']=update[6]
-    udata['start']['time']=dt.fromtimestamp(update[7]).strftime('%H:%M:%S')
+    # udata['start']['time']=dt.fromtimestamp(update[7]).strftime('%H:%M:%S')
+    udata['start']['time']=update[7]
     
-    if event[3]!=None:
-        transfer = trip.tripUpdate(event[3], transfer,feed)
+    if event['tripend']!=None:
+    # if event[u'queryStringParameters'][u'tripend']!=None:
+        transfer = trip.tripUpdate(event['tripend'], transfer,feed)
+        # transfer = trip.tripUpdate(event[u'queryStringParameters'][u'tripend'], transfer,feed)
         
         udata['transfer']={}
         udata['transfer']['trip_id']=transfer[0]
-        udata['transfer']['departureTime']=dt.fromtimestamp(transfer[1]).strftime('%H:%M:%S')
-        udata['transfer']['arrivalTime']=dt.fromtimestamp(transfer[2]).strftime('%H:%M:%S')
+        # udata['transfer']['departureTime']=dt.fromtimestamp(transfer[1]).strftime('%H:%M:%S')
+        udata['transfer']['departureTime']=transfer[1]
+        # udata['transfer']['arrivalTime']=dt.fromtimestamp(transfer[2]).strftime('%H:%M:%S')
+        udata['transfer']['arrivalTime']=transfer[2]
         # udata['transfer']['current_stop_id']=line[str(transfer[3][:3])]
-        udata['transfer']['current_stop_id']=str(transfer[3][:3])
+        udata['transfer']['current_stop_id']=transfer[3]
         udata['transfer']['current_status']=transfer[5]
         udata['transfer']['train_status']=transfer[6]
-        udata['transfer']['time']=dt.fromtimestamp(transfer[7]).strftime('%H:%M:%S')
+        # udata['transfer']['time']=dt.fromtimestamp(transfer[7]).strftime('%H:%M:%S')
+        udata['transfer']['time']=transfer[7]
     
     
     
-    
-    # pprint(udata)
+    print(udata)
     return(udata)
     # except:
         # pass
