@@ -20,7 +20,6 @@ def getlist(start,end):
         start = [stops.line1Nbound["14 St"],stops.line1Nbound["96 St"]]
         routes = ["1","2", "3"]
         line = stops.line1
-        # transfer_route = ["1"]
         
     elif start=="116 St - Columbia University" and end=="14 St":
         single = [stops.line1Sbound["116 St - Columbia University"],stops.line1Sbound["14 St"]]
@@ -29,94 +28,268 @@ def getlist(start,end):
         routes = ["1","2","3"]
         line = stops.line1
 
+    elif start=="14 St" and end=="34 St - Penn Station":
+        single = [stops.line1Nbound["14 St"],stops.line1Nbound["34 St - Penn Station"]]
+        # transfer = [stops.line1Nbound["14 St"],stops.line1Nbound["34 St - Penn Station"]]
+        transfer = None
+        start = [stops.line1Nbound["14 St"],stops.line1Nbound["34 St - Penn Station"]]
+        routes = ["1","2", "3"]
+        line = stops.line1
+        
+    elif start=="34 St - Penn Station" and end=="14 St":
+        single = [stops.line1Sbound["34 St - Penn Station"],stops.line1Sbound["14 St"]]
+        # transfer = [stops.line1Sbound["96 St"],stops.line1Sbound["14 St"]]
+        transfer = None
+        start = [stops.line1Sbound["34 St - Penn Station"],stops.line1Sbound["14 St"]]
+        routes = ["1","2","3"]
+        line = stops.line1
+    
+    elif start=="14 St" and end=="Times Sq - 42 St":
+        single = [stops.line1Nbound["14 St"],stops.line1Nbound["Times Sq - 42 St"]]
+        # transfer = [stops.line1Nbound["14 St"],stops.line1Nbound["34 St - Penn Station"]]
+        transfer = None
+        start = [stops.line1Nbound["14 St"],stops.line1Nbound["Times Sq - 42 St"]]
+        routes = ["1","2", "3"]
+        line = stops.line1
+        
+    elif start=="Times Sq - 42 St" and end=="14 St":
+        single = [stops.line1Sbound["Times Sq - 42 St"],stops.line1Sbound["14 St"]]
+        # transfer = [stops.line1Sbound["96 St"],stops.line1Sbound["14 St"]]
+        transfer = None
+        start = [stops.line1Sbound["Times Sq - 42 St"],stops.line1Sbound["14 St"]]
+        routes = ["1","2","3"]
+        line = stops.line1
+    
+    elif start=="14 St" and end=="59 St - Columbus Circle":
+        single = [stops.line1Nbound["14 St"],stops.line1Nbound["59 St - Columbus Circle"]]
+        transfer = [stops.line1Nbound["Times Sq - 42 St"],stops.line1Nbound["59 St - Columbus Circle"]]
+        # transfer = None
+        start = [stops.line1Nbound["14 St"],stops.line1Nbound["Times Sq - 42 St"]]
+        routes = ["1","2", "3"]
+        line = stops.line1
+        
+    elif start=="59 St - Columbus Circle" and end=="14 St":
+        single = [stops.line1Sbound["59 St - Columbus Circle"],stops.line1Sbound["14 St"]]
+        transfer = [stops.line1Sbound["Times Sq - 42 St"],stops.line1Sbound["14 St"]]
+        # transfer = None
+        start = [stops.line1Sbound["59 St - Columbus Circle"],stops.line1Sbound["Times Sq - 42 St"]]
+        routes = ["1","2","3"]
+        line = stops.line1
+    
+    elif start=="14 St" and end=="72 St":
+        single = [stops.line1Nbound["14 St"],stops.line1Nbound["72 St"]]
+        # transfer = [stops.line1Nbound["Times Sq - 42 St"],stops.line1Nbound["72 St"]]
+        transfer = None
+        start = [stops.line1Nbound["14 St"],stops.line1Nbound["72 St"]]
+        routes = ["1","2", "3"]
+        line = stops.line1
+        
+    elif start=="72 St" and end=="14 St":
+        single = [stops.line1Sbound["72 St"],stops.line1Sbound["14 St"]]
+        # transfer = [stops.line1Sbound["72 St"],stops.line1Sbound["14 St"]]
+        transfer = None
+        start = [stops.line1Sbound["72 St"],stops.line1Sbound["14 St"]]
+        routes = ["1","2","3"]
+        line = stops.line1
+    #-------------
+    elif start=="34 St - Penn Station" and end=="116 St - Columbia University":
+
+        single = [stops.line1Nbound["34 St - Penn Station"],stops.line1Nbound["116 St - Columbia University"]]
+        transfer = [stops.line1Nbound["96 St"],stops.line1Nbound["116 St - Columbia University"]]
+        start = [stops.line1Nbound["34 St - Penn Station"],stops.line1Nbound["96 St"]]
+        routes = ["1","2", "3"]
+        line = stops.line1
+        
+    elif start=="116 St - Columbia University" and end=="34 St - Penn Station":
+        single = [stops.line1Sbound["116 St - Columbia University"],stops.line1Sbound["34 St - Penn Station"]]
+        transfer = [stops.line1Sbound["96 St"],stops.line1Sbound["34 St - Penn Station"]]
+        start = [stops.line1Sbound["116 St - Columbia University"],stops.line1Sbound["96 St"]]
+        routes = ["1","2","3"]
+        line = stops.line1
+    
+    elif start=="34 St - Penn Station" and end=="Times Sq - 42 St":
+        single = [stops.line1Nbound["34 St - Penn Station"],stops.line1Nbound["Times Sq - 42 St"]]
+        # transfer = [stops.line1Nbound["14 St"],stops.line1Nbound["34 St - Penn Station"]]
+        transfer = None
+        start = [stops.line1Nbound["34 St - Penn Station"],stops.line1Nbound["Times Sq - 42 St"]]
+        routes = ["1","2", "3"]
+        line = stops.line1
+        
+    elif start=="Times Sq - 42 St" and end=="34 St - Penn Station":
+        single = [stops.line1Sbound["Times Sq - 42 St"],stops.line1Sbound["34 St - Penn Station"]]
+        # transfer = [stops.line1Sbound["96 St"],stops.line1Sbound["14 St"]]
+        transfer = None
+        start = [stops.line1Sbound["Times Sq - 42 St"],stops.line1Sbound["34 St - Penn Station"]]
+        routes = ["1","2","3"]
+        line = stops.line1
+    
+    elif start=="34 St - Penn Station" and end=="59 St - Columbus Circle":
+        single = [stops.line1Nbound["34 St - Penn Station"],stops.line1Nbound["59 St - Columbus Circle"]]
+        # transfer = [stops.line1Nbound["Times Sq - 42 St"],stops.line1Nbound["59 St - Columbus Circle"]]
+        transfer = None
+        start = [stops.line1Nbound["34 St - Penn Station"],stops.line1Nbound["59 St - Columbus Circle"]]
+        routes = ["1","2", "3"]
+        line = stops.line1
+        
+    elif start=="59 St - Columbus Circle" and end=="34 St - Penn Station":
+        single = [stops.line1Sbound["59 St - Columbus Circle"],stops.line1Sbound["34 St - Penn Station"]]
+        # transfer = [stops.line1Sbound["Times Sq - 42 St"],stops.line1Sbound["14 St"]]
+        transfer = None
+        start = [stops.line1Sbound["59 St - Columbus Circle"],stops.line1Sbound["34 St - Penn Station"]]
+        routes = ["1","2","3"]
+        line = stops.line1
+    
+    elif start=="34 St - Penn Station" and end=="72 St":
+        single = [stops.line1Nbound["34 St - Penn Station"],stops.line1Nbound["72 St"]]
+        # transfer = [stops.line1Nbound["Times Sq - 42 St"],stops.line1Nbound["72 St"]]
+        transfer = None
+        start = [stops.line1Nbound["34 St - Penn Station"],stops.line1Nbound["72 St"]]
+        routes = ["1","2", "3"]
+        line = stops.line1
+        
+    elif start=="72 St" and end=="34 St - Penn Station":
+        single = [stops.line1Sbound["72 St"],stops.line1Sbound["34 St - Penn Station"]]
+        # transfer = [stops.line1Sbound["72 St"],stops.line1Sbound["14 St"]]
+        transfer = None
+        start = [stops.line1Sbound["72 St"],stops.line1Sbound["34 St - Penn Station"]]
+        routes = ["1","2","3"]
+        line = stops.line1
+    #-------------
+    elif start=="Times Sq - 42 St" and end=="116 St - Columbia University":
+
+        single = [stops.line1Nbound["Times Sq - 42 St"],stops.line1Nbound["116 St - Columbia University"]]
+        transfer = [stops.line1Nbound["96 St"],stops.line1Nbound["116 St - Columbia University"]]
+        start = [stops.line1Nbound["Times Sq - 42 St"],stops.line1Nbound["96 St"]]
+        routes = ["1","2", "3"]
+        line = stops.line1
+        
+    elif start=="116 St - Columbia University" and end=="Times Sq - 42 St":
+        single = [stops.line1Sbound["116 St - Columbia University"],stops.line1Sbound["Times Sq - 42 St"]]
+        transfer = [stops.line1Sbound["96 St"],stops.line1Sbound["Times Sq - 42 St"]]
+        start = [stops.line1Sbound["116 St - Columbia University"],stops.line1Sbound["96 St"]]
+        routes = ["1","2","3"]
+        line = stops.line1
+    
+    elif start=="Times Sq - 42 St" and end=="59 St - Columbus Circle":
+        single = [stops.line1Nbound["Times Sq - 42 St"],stops.line1Nbound["59 St - Columbus Circle"]]
+        # transfer = [stops.line1Nbound["Times Sq - 42 St"],stops.line1Nbound["59 St - Columbus Circle"]]
+        transfer = None
+        start = [stops.line1Nbound["Times Sq - 42 St"],stops.line1Nbound["59 St - Columbus Circle"]]
+        routes = ["1","2", "3"]
+        line = stops.line1
+        
+    elif start=="59 St - Columbus Circle" and end=="Times Sq - 42 St":
+        single = [stops.line1Sbound["59 St - Columbus Circle"],stops.line1Sbound["Times Sq - 42 St"]]
+        # transfer = [stops.line1Sbound["Times Sq - 42 St"],stops.line1Sbound["14 St"]]
+        transfer = None
+        start = [stops.line1Sbound["59 St - Columbus Circle"],stops.line1Sbound["Times Sq - 42 St"]]
+        routes = ["1","2","3"]
+        line = stops.line1
+    
+    elif start=="Times Sq - 42 St" and end=="72 St":
+        single = [stops.line1Nbound["Times Sq - 42 St"],stops.line1Nbound["72 St"]]
+        # transfer = [stops.line1Nbound["Times Sq - 42 St"],stops.line1Nbound["72 St"]]
+        transfer = None
+        start = [stops.line1Nbound["Times Sq - 42 St"],stops.line1Nbound["72 St"]]
+        routes = ["1","2", "3"]
+        line = stops.line1
+        
+    elif start=="72 St" and end=="Times Sq - 42 St":
+        single = [stops.line1Sbound["72 St"],stops.line1Sbound["Times Sq - 42 St"]]
+        # transfer = [stops.line1Sbound["72 St"],stops.line1Sbound["14 St"]]
+        transfer = None
+        start = [stops.line1Sbound["72 St"],stops.line1Sbound["Times Sq - 42 St"]]
+        routes = ["1","2","3"]
+        line = stops.line1
+    #-------------
+    elif start=="72 St" and end=="116 St - Columbia University":
+
+        single = [stops.line1Nbound["72 St"],stops.line1Nbound["116 St - Columbia University"]]
+        transfer = [stops.line1Nbound["96 St"],stops.line1Nbound["116 St - Columbia University"]]
+        start = [stops.line1Nbound["72 St"],stops.line1Nbound["96 St"]]
+        routes = ["1","2", "3"]
+        line = stops.line1
+        
+    elif start=="116 St - Columbia University" and end=="72 St":
+        single = [stops.line1Sbound["116 St - Columbia University"],stops.line1Sbound["72 St"]]
+        transfer = [stops.line1Sbound["96 St"],stops.line1Sbound["72 St"]]
+        start = [stops.line1Sbound["116 St - Columbia University"],stops.line1Sbound["96 St"]]
+        routes = ["1","2","3"]
+        line = stops.line1
+    
     
     return(single, transfer, start, routes, line)
     
 def getTrip(event, context):
     
     print(event)
-    
-    feed = gtfs_realtime_pb2.FeedMessage()
-    response = requests.get("http://datamine.mta.info/mta_esi.php?key=%s&feed_id=1"%APIkey)
-    # print response       
-    feed.ParseFromString(response.content)
-    
-    
-    (single, transfer, start, routes, line)=getlist(event["start"],event["end"])
-    # (single, transfer, start, routes, line)=getlist(event["queryStringParameters"]["start"],event["queryStringParameters"]["end"])
+    try:
+        feed = gtfs_realtime_pb2.FeedMessage()
+        response = requests.get("http://datamine.mta.info/mta_esi.php?key=%s&feed_id=1"%APIkey)
+        # print response       
+        feed.ParseFromString(response.content)
         
         
-    # elif sys.argv[1]=="116 St - Columbia University" and sys.argv[2]=="14 St":
-        # single = [stops.line1Sbound["116 St - Columbia University"],stops.line1Sbound["14 St"]]
-        # transfer = [stops.line1Sbound["96 St"],stops.line1Sbound["14 St"]]
-        # start = [stops.line1Sbound["116 St - Columbia University"],stops.line1Sbound["96 St"]]
-        # routes = ["1","2","3"]
-        # line = stops.line1
-        # # transfer_route = ["1"]
-        
-        
-        
-    fastestTrip = trip.getFastestTrip(start,routes, feed)        
-    # print(fastestTrip)
-       
-    timeDiff = fastestTrip["arrivalTime"]-int(time.time())
-    fastestTransfer = trip.getFastestTransfer(transfer,routes,timeDiff,feed)
-
-    # print fastestTransfer
-        
-    # fastestTripSingle = trip.getFastestTrip(single,transfer_route)
-    fastestTripSingle = trip.getFastestTrip(single,routes,feed)
-
-    # print fastestTripSingle
-        
-    if fastestTransfer["arrivalTime"] < fastestTripSingle["arrivalTime"]:
-        # print("Take transfer trip")
+        (single, transfer, start, routes, line)=getlist(event["start"],event["end"])
+        # (single, transfer, start, routes, line)=getlist(event["queryStringParameters"]["start"],event["queryStringParameters"]["end"])
+            
+            
+            
+            
+            
+        fastestTrip = trip.getFastestTrip(start,routes, feed)        
         # print(fastestTrip)
-        # print(fastestTransfer)
-        data = {}
-        data["start"]=fastestTrip
-        data["transfer"]=fastestTransfer
+        if transfer == None:
+            fastestTransfer = fastestTrip
+        else:
+            timeDiff = fastestTrip["arrivalTime"]-int(time.time())
+            fastestTransfer = trip.getFastestTransfer(transfer,routes,timeDiff,feed)
 
-        # data["start"]["trip_id"]=fastestTrip[0]
-        # data["start"]["route_id"]=fastestTrip[0][7]
-        # data["start"]["start_station"]=start[0]
-        # data["start"]["departure"]=fastestTrip[1]
-        # data["start"]["end_station"]=start[1]
-        # # data["start"]["arrival"]=
+        # print fastestTransfer
+            
+        # fastestTripSingle = trip.getFastestTrip(single,transfer_route)
+        fastestTripSingle = trip.getFastestTrip(single,routes,feed)
 
-        # data["transfer"]["trip_id"]=fastestTransfer[0]
-        # data["transfer"]["route_id"]=fastestTransfer[0][7]
-        # data["transfer"]["start_station"]=transfer[0]
-        # data["transfer"]["departure"]=fastestTransfer[1]
-        # data["transfer"]["arrival"]=fastestTransfer[2]
-        # data["transfer"]["end_station"]=transfer[1]
+        # print fastestTripSingle
+            
+        if fastestTransfer["arrivalTime"] < fastestTripSingle["arrivalTime"]:
+            # print("Take transfer trip")
+            # print(fastestTrip)
+            # print(fastestTransfer)
+            data = {}
+            data["start"]=fastestTrip
+            if transfer == None:
+                data["transfer"]=None
+            else:
+                data["transfer"]=fastestTransfer
 
+            json_data = json.dumps(data)
 
-        json_data = json.dumps(data)
+            # print(json_data)
+            
+            
+            
+        else:
+            # print("Take single trip")
+            data = {}
+            data["start"]=fastestTripSingle
+            data["transfer"]=None
+            
+            # data["start"]["trip_id"]=fastestTripSingle[0]
+            # data["start"]["route_id"]=fastestTripSingle[0][7]
+            # data["start"]["start_station"]=single[0]
+            # data["start"]["departure"]=fastestTripSingle[1]
+            # data["start"]["end_station"]=single[1]
+            
+            json_data = json.dumps(data)
+            
+            # print(json_data)
 
-        # print(json_data)
-        
-        
-        
-    else:
-        # print("Take single trip")
-        data = {}
-        data["start"]=fastestTripSingle
-        data["transfer"]=None
-        
-        # data["start"]["trip_id"]=fastestTripSingle[0]
-        # data["start"]["route_id"]=fastestTripSingle[0][7]
-        # data["start"]["start_station"]=single[0]
-        # data["start"]["departure"]=fastestTripSingle[1]
-        # data["start"]["end_station"]=single[1]
-        
-        json_data = json.dumps(data)
-        
-        # print(json_data)
-
-    print(json_data)
-    print(data)
-    return(data)
+        print(json_data)
+        print(data)
+        return(data)
+    except:
+        pass
     # return(json_data)
     
 def getTripUpdate(event, context):
@@ -174,3 +347,4 @@ def getTripUpdate(event, context):
         # pass
             
 # getTrip(["14 St","116 St - Columbia University"],1)
+# {"start":"14 St","end":"34 St - Penn Station"}
