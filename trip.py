@@ -19,7 +19,7 @@ def getTripId(stationName,route,wait_time):
     response = requests.get('http://datamine.mta.info/mta_esi.php?key=%s&feed_id=1'%key)
     print response
     feed.ParseFromString(response.content)
-    
+    # pprint(feed)
     dictTrip = {}
     departureList = []
     time_now = time.time()
@@ -134,7 +134,7 @@ def getFastestTrip(stationNames,routes):
         trip_id = getTripId(start_stop_id, route, 120)
         trip_ids[trip_id] = {}
 
-        trip_ids.append(getTripId(start_stop_id, route, 0))
+        # trip_ids.append(getTripId(start_stop_id, route, 0))
 
     
     arrivalTimes = {}

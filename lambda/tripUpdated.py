@@ -173,7 +173,7 @@ def getFastestTrip(stationNames,routes, feed):
     
     trip_ids = {}
     for route in routes:
-        trip_id = getTripId(start_stop_id, route, 900, feed)
+        trip_id = getTripId(start_stop_id, route, 120, feed)
         if trip_id != None:
             trip_ids[trip_id] = {}
     # pprint(trip_ids.keys())
@@ -214,7 +214,8 @@ def getFastestTrip(stationNames,routes, feed):
                 arrivalMinutes = ((trip_ids[key]['arrivalTime'])-int(time.time()))/60
                 arrivalTimes[key] = trip_ids[key]['arrivalTime']
             except:
-                print('No arrival information avaialble')
+                # print('No arrival information avaialble')
+                pass
             
     # pprint(trip_ids)
 
@@ -282,7 +283,8 @@ def getFastestTransfer(stationNames,routes,timeDiff, feed):
                 arrivalMinutes = ((trip_ids[key]['arrivalTime'])-int(time.time()))/60
                 arrivalTimes[key] = trip_ids[key]['arrivalTime']
             except:
-                print('No arrival information avaialble.')
+                # print('No arrival information avaialble.')
+                pass
             
     # pprint(trip_ids)
 

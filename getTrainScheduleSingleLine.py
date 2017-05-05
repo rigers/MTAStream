@@ -1,4 +1,4 @@
-import L_stops as L
+# import L_stops as L
 import trip
 import time
 import stops
@@ -26,41 +26,41 @@ L314to96 = [stops.line1Nbound['14 St'],stops.line1Nbound['96 St']]
 
 routes = ['1','2','3']
 
-# for i in range(0,len(stops.line1Seq)):
-    # print('%s : %s'%(i,stops.line1Seq[i]))
+for i in range(0,len(stops.line1Seq)):
+    print('%s : %s'%(i,stops.line1Seq[i]))
 
-# startStation = None
+startStation = None
     
-# while startStation == None:
-    # try:
-        # startIndex = int(raw_input("Enter starting station: "))
-        # # startStation = L.stationNames[startIndex]
-        # # startStation = stops.line1Seq[startIndex]
+while startStation == None:
+    try:
+        startIndex = int(raw_input("Enter starting station: "))
+        # startStation = L.stationNames[startIndex]
+        startStation = stops.line1Seq[startIndex]
         
-    # except:
-        # print 'Please enter a valid station name'
-        # startStation = None
+    except:
+        print 'Please enter a valid station name'
+        startStation = None
 
-# endStation = None        
-# while endStation == None:
-    # try:
-        # endIndex = int(raw_input("Enter destination: "))
-        # # endStation = L.stationNames[startIndex]
-        # # endStation = stops.line1Seq[endIndex]
+endStation = None        
+while endStation == None:
+    try:
+        endIndex = int(raw_input("Enter destination: "))
+        # endStation = L.stationNames[startIndex]
+        endStation = stops.line1Seq[endIndex]
         
-    # except:
-        # print 'Please enter a valid station name'
-        # startStation = None
-startStation = L114to96[0]
-endStation = L114to96[1]
+    except:
+        print 'Please enter a valid station name'
+        startStation = None
+# startStation = L114to96[0]
+# endStation = L114to96[1]
    
         
-# if startIndex < endIndex:
-    # direction = south
-# elif startIndex > endIndex:
-    # direction = north
-# else:
-    # print "You're already there!"
+if startIndex < endIndex:
+    direction = south
+elif startIndex > endIndex:
+    direction = north
+else:
+    print "You're already there!"
     
 start_stop_id = startStation
 end_stop_id = endStation

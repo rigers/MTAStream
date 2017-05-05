@@ -26,3 +26,15 @@ lineLSeq = ['8 Av', '6 Av', 'Union Sq - 14 St', '3 Av', '1 Av', 'Bedford Av', 'L
 lineL = {'L19': 'Halsey St', 'L14': 'Morgan Av', 'L15': 'Jefferson St', 'L16': 'DeKalb Av', 'L17': 'Myrtle - Wyckoff Avs', 'L10': 'Lorimer St', 'L11': 'Graham Av', 'L12': 'Grand St', 'L13': 'Montrose Av', 'L21': 'Bushwick Av - Aberdeen St', 'L20': 'Wilson Av', 'L22': 'Broadway Jct', 'L25': 'Sutter Av', 'L24': 'Atlantic Av', 'L27': 'New Lots Av', 'L26': 'Livonia Av', 'L29': 'Canarsie - Rockaway Pkwy', 'L28': 'E 105 St', 'L08': 'Bedford Av', 'L06': '1 Av', 'L05': '3 Av', 'L03': 'Union Sq - 14 St', 'L02': '6 Av', 'L01': '8 Av'}
 lineLNbound = {'L08N': 'Bedford Av', 'L16N': 'DeKalb Av', 'L21N': 'Bushwick Av - Aberdeen St', 'L06N': '1 Av', 'L27N': 'New Lots Av', 'L02N': '6 Av', 'L10N': 'Lorimer St', 'L14N': 'Morgan Av', 'L12N': 'Grand St', 'L25N': 'Sutter Av', 'L29N': 'Canarsie - Rockaway Pkwy', 'L05N': '3 Av', 'L17N': 'Myrtle - Wyckoff Avs', 'L15N': 'Jefferson St', 'L26N': 'Livonia Av', 'L19N': 'Halsey St', 'L22N': 'Broadway Jct', 'L20N': 'Wilson Av', 'L11N': 'Graham Av', 'L28N': 'E 105 St', 'L03N': 'Union Sq - 14 St', 'L24N': 'Atlantic Av', 'L01N': '8 Av', 'L13N': 'Montrose Av'}
 lineLSbound = {'L27S': 'New Lots Av', 'L06S': '1 Av', 'L16S': 'DeKalb Av', 'L21S': 'Bushwick Av - Aberdeen St', 'L08S': 'Bedford Av', 'L29S': 'Canarsie - Rockaway Pkwy', 'L12S': 'Grand St', 'L25S': 'Sutter Av', 'L14S': 'Morgan Av', 'L10S': 'Lorimer St', 'L02S': '6 Av', 'L20S': 'Wilson Av', 'L19S': 'Halsey St', 'L22S': 'Broadway Jct', 'L15S': 'Jefferson St', 'L26S': 'Livonia Av', 'L05S': '3 Av', 'L17S': 'Myrtle - Wyckoff Avs', 'L01S': '8 Av', 'L13S': 'Montrose Av', 'L24S': 'Atlantic Av', 'L28S': 'E 105 St', 'L03S': 'Union Sq - 14 St', 'L11S': 'Graham Av'}
+
+
+
+def get_stop_name(id):
+    if id[0] == "2":
+        stop_name = line2[id[:3]]
+    elif id[0] == "3":    
+        stop_name = line3[id[:3]]
+    elif id[0] == "1":
+        stop_name = line1[id[:3]]
+        
+    return stop_name

@@ -202,6 +202,42 @@ def getlist(start,end):
         routes = ["1","2","3"]
         line = stops.line1
     #-------------
+ 
+    elif start=="59 St - Columbus Circle" and end=="116 St - Columbia University":
+
+        single = [stops.line1Nbound["59 St - Columbus Circle"],stops.line1Nbound["116 St - Columbia University"]]
+        # transfer = [stops.line1Nbound["96 St"],stops.line1Nbound["116 St - Columbia University"]]
+        transfer=None
+        start = [stops.line1Nbound["59 St - Columbus Circle"],stops.line1Nbound["116 St - Columbia University"]]
+        routes = ["1","2", "3"]
+        line = stops.line1
+        
+    elif start=="116 St - Columbia University" and end=="59 St - Columbus Circle":
+        single = [stops.line1Sbound["116 St - Columbia University"],stops.line1Sbound["59 St - Columbus Circle"]]
+        # transfer = [stops.line1Sbound["96 St"],stops.line1Sbound["Times Sq - 42 St"]]
+        transfer = None
+        start = [stops.line1Sbound["116 St - Columbia University"],stops.line1Sbound["59 St - Columbus Circle"]]
+        routes = ["1","2","3"]
+        line = stops.line1
+    
+    elif start=="59 St - Columbus Circle" and end=="72 St":
+        single = [stops.line1Nbound["59 St - Columbus Circle"],stops.line1Nbound["72 St"]]
+        # transfer = [stops.line1Nbound["Times Sq - 42 St"],stops.line1Nbound["72 St"]]
+        transfer = None
+        start = [stops.line1Nbound["59 St - Columbus Circle"],stops.line1Nbound["72 St"]]
+        routes = ["1","2", "3"]
+        line = stops.line1
+        
+    elif start=="72 St" and end=="59 St - Columbus Circle":
+        single = [stops.line1Sbound["72 St"],stops.line1Sbound["59 St - Columbus Circle"]]
+        # transfer = [stops.line1Sbound["72 St"],stops.line1Sbound["14 St"]]
+        transfer = None
+        start = [stops.line1Sbound["72 St"],stops.line1Sbound["59 St - Columbus Circle"]]
+        routes = ["1","2","3"]
+        line = stops.line1
+    
+    
+    #-------------
     elif start=="72 St" and end=="116 St - Columbia University":
 
         single = [stops.line1Nbound["72 St"],stops.line1Nbound["116 St - Columbia University"]]
@@ -222,7 +258,7 @@ def getlist(start,end):
     
 def getTrip(event, context):
     
-    print(event)
+    # print(event)
     try:
         feed = gtfs_realtime_pb2.FeedMessage()
         response = requests.get("http://datamine.mta.info/mta_esi.php?key=%s&feed_id=1"%APIkey)
@@ -234,9 +270,7 @@ def getTrip(event, context):
         # (single, transfer, start, routes, line)=getlist(event["queryStringParameters"]["start"],event["queryStringParameters"]["end"])
             
             
-            
-            
-            
+
         fastestTrip = trip.getFastestTrip(start,routes, feed)        
         # print(fastestTrip)
         if transfer == None:
@@ -285,8 +319,8 @@ def getTrip(event, context):
             
             # print(json_data)
 
-        print(json_data)
-        print(data)
+        # print(json_data)
+        # print(data)
         return(data)
     except:
         pass
@@ -298,7 +332,7 @@ def getTripUpdate(event, context):
     response = requests.get("http://datamine.mta.info/mta_esi.php?key=%s&feed_id=1"%APIkey)
     # print response       
     feed.ParseFromString(response.content)
-    print(event)
+    # print(event)
     (single, transfer, start, routes, line)=getlist(event["start"],event["end"])
     # (single, transfer, start, routes, line)=getlist(event[u"queryStringParameters"][u"start"],event[u"queryStringParameters"][u"end"])
     
@@ -321,7 +355,8 @@ def getTripUpdate(event, context):
     # udata["start"]["time"]=dt.fromtimestamp(update[7]).strftime("%H:%M:%S")
     udata["start"]["time"]=update[7]
     
-    if event["tripend"]!=None:
+    
+    if event["tripend"]!="":
     # if event[u"queryStringParameters"][u"tripend"]!=None:
         transfer = trip.tripUpdate(event["tripend"], transfer,feed)
         # transfer = trip.tripUpdate(event[u"queryStringParameters"][u"tripend"], transfer,feed)
@@ -338,10 +373,11 @@ def getTripUpdate(event, context):
         udata["transfer"]["train_status"]=transfer[6]
         # udata["transfer"]["time"]=dt.fromtimestamp(transfer[7]).strftime("%H:%M:%S")
         udata["transfer"]["time"]=transfer[7]
+    else:
+        udata["transfer"]=None
     
     
-    
-    print(udata)
+    # print(udata)
     return(udata)
     # except:
         # pass
